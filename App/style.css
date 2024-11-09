@@ -1,0 +1,293 @@
+/* General Styles */
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Sora', sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container-fluid {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.row {
+    flex: 1;
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+/* Video Section */
+.video-section {
+    background-color: #f8f9fa;
+    display: flex;
+    flex-direction: column; /* Vertical stacking */
+    align-items: center;
+    justify-content: flex-start; /* Align content to the top */
+    padding: 20px;
+    box-sizing: border-box;
+    overflow: hidden; /* Prevent overflow affecting layout */
+}
+
+#liveVideo {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    background-color: #000; /* Black background for video element */
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+.button-container {
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.button-container button {
+    min-width: 150px; /* Ensures buttons are medium-sized */
+    margin-bottom: 10px;
+}
+
+#recordingTimer {
+    font-size: 1rem;
+    margin-left: 10px;
+}
+
+#recordingIndicator {
+    font-size: 0.8rem;
+}
+
+/* Validation Message */
+#validationMessage {
+    font-size: 1rem;
+}
+
+/* Selected Question Box */
+#selectedQuestionBox {
+    background-color: #f9f9f9;
+    min-height: 60px;
+}
+
+.selected-question h4 {
+    margin-bottom: 10px;
+}
+
+/* Physical Feedback Section */
+.physical-feedback {
+    /* No additional styles needed as styling is handled by feedback-indicator */
+}
+
+.feedback-indicator {
+    /* Removed flex properties to allow inline content */
+    display: inline-block;
+    width: auto;
+}
+
+.feedback-indicator strong {
+    font-size: 1rem;
+}
+
+/* "My Interviews" Section */
+.my-interviews {
+    width: 100%;
+    margin-top: 20px;
+    flex: 1; /* Take up remaining space */
+    overflow-y: auto; /* Scroll when content overflows */
+}
+
+.my-interviews h4 {
+    margin-bottom: 15px;
+}
+
+#recordedVideos .video-recording {
+    margin-bottom: 15px;
+}
+
+#recordedVideos video {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 5px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+#recordedVideos .download-link {
+    display: inline-block;
+    margin-top: 5px;
+}
+
+#recordedVideos .delete-button {
+    display: inline-block;
+    margin-top: 5px;
+    margin-left: 10px;
+}
+
+/* Feedback Section */
+.feedback-section {
+    background-color: #ffffff;
+    padding: 40px 20px;
+    overflow-y: auto; /* Scroll if content overflows */
+}
+
+.feedback-section h2 {
+    font-weight: 700;
+}
+
+#feedbackContent {
+    margin-top: 20px;
+}
+
+.feedback-message {
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 5px;
+    color: #fff;
+}
+
+.feedback-positive {
+    background-color: #28a745;
+}
+
+.feedback-negative {
+    background-color: #dc3545;
+}
+
+.feedback-neutral {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+/* Transcript Container */
+.transcript-container h4 {
+    margin-bottom: 10px;
+}
+
+.transcript-container {
+    background-color: #ffffff;
+}
+
+#transcriptContent {
+    white-space: pre-wrap;
+}
+
+/* Tips List */
+#tipsList {
+    margin-top: 10px;
+}
+
+#tipsList li {
+    margin-bottom: 10px;
+}
+
+/* Footer Styling */
+.footer {
+    background-color: #343a40;
+}
+
+.footer .social-icons a {
+    color: #fff;
+    margin: 0 10px;
+    transition: color 0.3s;
+}
+
+.footer .social-icons a:hover {
+    color: #0d6efd;
+}
+
+.footer .social-icons a i {
+    vertical-align: middle;
+}
+
+/* Disabled Button Styles */
+.button-container button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Hover Effects for Buttons */
+.button-container button:hover:not(:disabled) {
+    opacity: 0.9;
+    transition: opacity 0.3s;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 767.98px) {
+    .video-section, .feedback-section {
+        height: auto; /* Remove fixed height on smaller screens */
+    }
+}
+
+@media (max-width: 576px) {
+    #liveVideo {
+        width: 100%;
+    }
+
+    .button-container {
+        padding: 8px 16px;
+    }
+
+    .button-container button {
+        min-width: 120px;
+        padding: 0.4rem 0.8rem;
+    }
+
+    .my-interviews h4 {
+        font-size: 1.2rem;
+    }
+
+    .physical-feedback .feedback-indicator {
+        width: 100%;
+    }
+
+    .feedback-indicator {
+        /* For smaller screens, ensure labels and statuses stack if needed */
+        display: block;
+    }
+
+    .feedback-indicator strong {
+        display: inline;
+        margin-right: 5px;
+    }
+}
+
+/* Question Dropdown Styling */
+.question-dropdown .dropdown-toggle {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.question-dropdown .dropdown-menu {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+/* Real-time Feedback Container */
+.real-time-feedback-container {
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 5px;
+}
+
+/* Feedback Message Styling */
+.feedback-message {
+    width: 48%; /* Takes up half the container width */
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    color: #000000; /* Set text color to black */
+}
