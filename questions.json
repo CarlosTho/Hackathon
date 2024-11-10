@@ -1,0 +1,57 @@
+
+{
+    "questions": [ 
+        {
+  "id": 1,
+  "text": "Tell me more about yourself",
+  "answers": [
+    "I am a software developer with 5 years of experience in full-stack development, primarily working with JavaScript and Python. I'm passionate about building scalable applications and optimizing user experiences.",
+    "I have a strong background in data analysis, with over 3 years of experience working in the finance industry. I enjoy using data to uncover insights and support business decisions.",
+    "I am a recent computer science graduate with hands-on experience in machine learning projects. I'm eager to bring my skills to a challenging role where I can continue learning and growing.",
+    "With 4 years of experience in project management, I have successfully led cross-functional teams to deliver projects on time and within budget, focusing on improving operational efficiency.",
+    "I’m a cybersecurity enthusiast with experience in network security and ethical hacking. I aim to contribute to a team that values proactive measures in protecting sensitive information.",
+    "I have been working in software quality assurance for 6 years, ensuring that all products meet the highest standards before release. I thrive in fast-paced environments where attention to detail is crucial.",
+    "I am an AI researcher with a passion for natural language processing. Over the last 2 years, I’ve been involved in developing conversational AI models that improve human-computer interaction.",
+    "I have over 7 years of experience in front-end development, specializing in creating accessible and responsive user interfaces using modern frameworks like React and Vue.js.",
+    "I’m an operations analyst with a background in logistics, where I've helped streamline processes, resulting in a 15% cost reduction over the last year.",
+    "I am a customer success manager with a knack for building strong client relationships. Over my 5-year career, I've helped increase customer retention rates by 20%.",
+    "I have a background in mechanical engineering, with 3 years of experience in the automotive industry, focusing on product development and process optimization.",
+    "I’m a creative marketer with a flair for content creation and strategy. I have developed campaigns that have increased engagement by over 30% for my previous employer.",
+    "I’m a financial analyst with 4 years of experience in budgeting and forecasting. I enjoy providing data-driven insights to support strategic decision-making.",
+    "I am a product designer passionate about human-centered design. I've worked on several projects where user research directly influenced the final product, ensuring a positive user experience.",
+    "I have 8 years of experience in cloud infrastructure, specializing in AWS and Azure, helping businesses migrate and optimize their cloud environments.",
+    "I’m a dedicated teacher with 10 years of experience in secondary education, focusing on mathematics and computer science, with a passion for making complex concepts easy to understand.",
+    "I’m an entrepreneur with experience in launching and scaling startups, and I’m eager to bring my expertise to a role where innovation and growth are key focuses.",
+    "I am an HR professional with a focus on talent acquisition, with over 6 years of experience in helping organizations find and retain top talent.",
+    "I’m a UX researcher with a deep interest in understanding user needs and behaviors. My work has directly impacted product roadmaps, resulting in better engagement and satisfaction.",
+    "I am an environmental scientist with a passion for sustainability, having worked on projects that focus on renewable energy and reducing carbon footprints."
+    ]
+  },
+
+{
+  "id": 2,
+  "text": "Where do you see yourself in 5 years?",
+  "answers": [
+    "In five years, I see myself in a leadership role, managing a team of talented individuals and contributing to impactful projects that align with the company's goals.",
+    "I envision myself growing into a senior developer position, where I can lead key projects and mentor junior developers, sharing the knowledge I have gained over the years.",
+    "In five years, I hope to have developed a deep expertise in my field, working on innovative projects and being recognized as a subject matter expert.",
+    "I see myself taking on more responsibilities, perhaps in a management capacity, where I can help shape the strategic direction of the team or department.",
+    "In five years, I want to be in a position where I’m actively contributing to the company’s growth, whether through leading initiatives, improving processes, or driving innovation.",
+    "I aim to have expanded my skill set significantly, especially in emerging technologies, so that I can take on more complex and challenging projects.",
+    "I hope to be working on projects that have a meaningful impact on society, using my skills to contribute to solutions for important challenges.",
+    "In five years, I see myself in a role where I am collaborating closely with cross-functional teams to drive projects from conception to completion.",
+    "I envision myself having built a solid career foundation, with a track record of successful projects and contributions that have added significant value to the company.",
+    "In five years, I see myself being more involved in mentoring others, helping new team members grow, and contributing to a positive and supportive work environment.",
+    "I plan to be an expert in my field, taking on challenging projects and leading a team that tackles innovative solutions to industry problems.",
+    "I see myself taking on an advanced role where I can use both my technical and leadership skills to contribute to strategic decision-making.",
+    "In five years, I want to be in a position where I’m known for my creative approach to problem-solving, actively contributing to projects that drive innovation.",
+    "I envision growing into a product management role, where I can bridge the gap between development and customer needs, helping to shape impactful products.",
+    "I see myself pursuing continuous learning opportunities, obtaining certifications, and attending industry conferences to stay at the forefront of new developments.",
+    "In five years, I want to be leading projects that incorporate cutting-edge technologies, ensuring that the company remains competitive in the industry.",
+    "I envision myself in a role where I can contribute to the long-term vision of the company, possibly as part of the strategic planning team.",
+    "In five years, I want to have developed a robust network within the industry, allowing me to bring valuable insights and collaborations to the company.",
+    "I see myself taking on roles that challenge me to grow, whether it’s through managing larger teams or diving into more complex technical challenges.",
+    "In five years, I see myself having achieved a balance between technical proficiency and leadership, using both to create impactful results for my team and company."
+  ]
+} ]
+}

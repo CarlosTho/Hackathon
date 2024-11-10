@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Face detection on the browser using javascript !</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome for Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+ 
+        <video id="video" width="600" height="450" autoplay></video>
+      <div id="message" style="font-size: 24px; color: red; text-align: center; margin-top: 20px;"></div>
+     
+      
+      <div style="width: 100%; position: relative; font-family: Arial, sans-serif;">
+        <label for="dropdown" style="font-size: 16px; font-weight: bold;">Select a Practice Question:</label>
+        <select id="dropdown" 
+                style="width: 100%; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 5px; background-color: #f9f9f9; color: #333; cursor: pointer;">
+            <option value="1">Tell me about yourself</option>
+            <option value="2">Where do you see yourself in five years?</option>
+            <option value="3">Describe a challenging work situation and how you overcame it.</option>
+           
+        </select>
+    </div>
+
+     
+
+   <!-- Message Container -->
+   <div id="message2"></div>
+  
+   <div class="container mt-4">
+    <textarea 
+    id="transcription" 
+    class="form-control p-3"
+    style="width: 90%; height: 200px; font-size: 1.2rem; resize: none;" 
+    placeholder="Your speech will appear here..."></textarea>
+</div><br>
+   
+   <!-- Controls for Speech Recognition -->
+   <div id="controls">
+     <button id="start-listening" class="btn btn-primary me-2" ><i class="fas fa-play me-1"></i>Start Listening</button>
+     <button id="stop-listening"  class="btn btn-danger" > <i class="fas fa-stop me-1"></i>Stop Listening</button>
+     <button id="speak-message" class="btn btn-success" onclick="evaluateResponse()"> Submit </button>
+   </div>
+<br/>
+   <center><h2>AI Interview Coach Feedback</h2></center>
+   <!--<input type="text" id="response" placeholder="Your response" />
+   <button onclick="evaluateResponse()">Evaluate</button>-->
+
+<div class="container p-1">
+ <center>
+  <span class="fs-1" id="specificScore" style="font-size: 1.5rem; font-weight: bold;"></span>
+ </center> 
+  <div id="feedback"  class="p-4 text-center rounded" >
+  
+  </div>
+</div>
+   
+
+    <script defer src="face-api.min.js"></script>
+       <!-- Load jQuery from CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script defer src="script.js"></script>
+  <script defer src="speechToText.js"></script>
+
+  <script>
+    async function evaluateResponse() {
+      const dropdown = document.getElementById('dropdown');
+    
+    // Get the value of the selected option
+    const selectedValue = dropdown.options[dropdown.selectedIndex].value;
+    
+    
+    // Display the value in the console (or handle it as needed)
+    //console.log('Selected Option Value:', selectedValue);
+    
+    
+        const questionId = 1;  // Example question ID
+        const userResponse = document.getElementById('transcription').value;
+
+        const data = { question_id: parseInt(selectedValue, 10), user_response: userResponse };
+        console.log(data)
+
+        try { 
+            const response = await fetch("https://61e5-35-229-221-78.ngrok-free.app/api/evaluate", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
+
+            const result = await response.json();
+            function updateFeedback(score) {
+    const feedbackDiv = document.getElementById('specificScore');
+
+    // Set the text content to the score
+    feedbackDiv.textContent = ` ${score} %`;
+
+    // Apply conditional styling based on the score
+    if (score >= 75) {
+        feedbackDiv.classList.remove('text-danger');
+        feedbackDiv.classList.add('text-success');  // Green color for high score
+    } else {
+        feedbackDiv.classList.remove('text-success');
+        feedbackDiv.classList.add('text-danger');  // Red color for low score
+    }
+}
+            updateFeedback(result.similarity_score * 100);
+            document.getElementById('feedback').innerText = `
+               ${result.feedback}
+            `;
+        } catch (error) {
+            console.error("Error:", error);
+            document.getElementById('feedback').innerText = "Error connecting to the server.";
+        }
+    }
+</script>
+   
+</body>
+</html>
