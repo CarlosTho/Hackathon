@@ -28,6 +28,24 @@ const selectedQuestionText = document.getElementById("selectedQuestionText");
 let mediaRecorder;
 let recordedChunks = [];
 
+// Variables for Speech Recognition
+window.SpeechRecognition =
+  window.SpeechRecognition || window.webkitSpeechRecognition;
+
+let recognition;
+if ("SpeechRecognition" in window || "webkitSpeechRecognition" in window) {
+  recognition = new window.SpeechRecognition();
+  recognition.continuous = true; // Keep recognizing until stopped
+  recognition.interimResults = true; // Show interim results
+  recognition.lang = "en-US"; // Set language
+} else {
+  console.log("Speech Recognition API not supported in this browser.");
+  alert("Speech Recognition API not supported in this browser.");
+}
+
+// Variable to hold the recognized text
+let finalTranscript = "";
+
 // Timer variables
 let timerInterval;
 let seconds = 0;
@@ -47,22 +65,24 @@ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 async function initLiveVideo() {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: "user" },
+      video: {
+        facingMode: "user",
+        width: { ideal: 640 }, // Adjusted for performance
+        height: { ideal: 480 },
+      },
       audio: true, // Enable audio capture
     });
     liveVideo.srcObject = stream;
     liveVideo.play();
 
+    // Set video dimensions once metadata is loaded
+    liveVideo.addEventListener("loadedmetadata", () => {
+      liveVideo.width = liveVideo.videoWidth;
+      liveVideo.height = liveVideo.videoHeight;
+    });
+
     // Prevent audio echo by muting the live video playback
     liveVideo.muted = true;
-
-    // Optional: Allow users to hear themselves through an audio element
-    /*
-        const audioElement = document.createElement('audio');
-        audioElement.srcObject = stream;
-        audioElement.play();
-        audioElement.volume = 0.5; // Adjust volume as needed
-        */
   } catch (error) {
     console.error("Error accessing the camera and microphone: ", error);
     if (error.name === "NotAllowedError") {
@@ -137,10 +157,16 @@ function startRecording() {
   // Update button states
   startRecordingButton.disabled = true;
   stopRecordingButton.disabled = false;
+
+  // Start speech recognition
+  startSpeechRecognition();
 }
 
 // Function to stop recording
 function stopRecording() {
+  // Stop speech recognition
+  stopSpeechRecognition();
+
   if (mediaRecorder && mediaRecorder.state !== "inactive") {
     mediaRecorder.stop();
     console.log("Recording stopped.");
@@ -152,6 +178,36 @@ function stopRecording() {
     // Update button states
     startRecordingButton.disabled = false;
     stopRecordingButton.disabled = true;
+  }
+}
+
+// Function to start speech recognition
+function startSpeechRecognition() {
+  if (recognition) {
+    finalTranscript = "";
+    recognition.start();
+    recognition.onresult = (event) => {
+      let interimTranscript = "";
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        const transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          finalTranscript += transcript + " ";
+        } else {
+          interimTranscript += transcript;
+        }
+      }
+      displayTranscript(finalTranscript + "<i>" + interimTranscript + "</i>");
+    };
+    recognition.onerror = (event) => {
+      console.error("Speech recognition error detected: " + event.error);
+    };
+  }
+}
+
+// Function to stop speech recognition
+function stopSpeechRecognition() {
+  if (recognition) {
+    recognition.stop();
   }
 }
 
@@ -229,36 +285,8 @@ function appendRecordedVideo(url, blob) {
   // Disable the Start Recording button since a recording exists
   startRecordingButton.disabled = true;
 
-  // Send the audio blob to the backend for processing
-  sendAudioToBackend(blob);
-}
-
-// Function to send audio to the backend
-function sendAudioToBackend(blob) {
-  const formData = new FormData();
-  formData.append("file", blob, "interview.webm");
-
-  // Use the selectedQuestion variable
-  formData.append("question", selectedQuestion);
-
-  // Display a loading indicator or disable buttons if desired
-  fetch("http://localhost:5000/process_audio", {
-    method: "POST",
-    body: formData,
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.error) {
-        alert(`Error: ${data.error}`);
-        return;
-      }
-      displayFeedback(data.feedback);
-      displayTranscript(data.transcript);
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-      alert("An error occurred while processing your recording.");
-    });
+  // Send the audio blob to the backend for processing (if applicable)
+  // sendAudioToBackend(blob);
 }
 
 // Function to display feedback
@@ -274,39 +302,8 @@ function displayFeedback(feedbackText) {
 
 // Function to display transcript
 function displayTranscript(transcriptText) {
-  const transcriptDiv = document.getElementById("transcriptContent");
-  transcriptDiv.textContent = transcriptText;
-}
-
-// Function to display tips
-function displayTips() {
-  console.log("Displaying tips...");
-  // Clear previous tips
-  tipsList.innerHTML = "";
-
-  // Check if tipsList exists
-  if (!tipsList) {
-    console.error("tipsList element not found.");
-    return;
-  }
-
-  // Mock tips data
-  const tips = [
-    "Practice common interview questions.",
-    "Maintain eye contact with the interviewer.",
-    "Keep your answers concise and relevant.",
-    "Show enthusiasm and confidence.",
-    "Prepare examples that showcase your skills.",
-  ];
-
-  // Add each tip
-  tips.forEach(function (tip) {
-    console.log(`Adding tip: ${tip}`);
-    const tipItem = document.createElement("li");
-    tipItem.classList.add("list-group-item");
-    tipItem.textContent = tip;
-    tipsList.appendChild(tipItem);
-  });
+  const transcriptDiv = document.getElementById("transcribedText");
+  transcriptDiv.innerHTML = transcriptText;
 }
 
 // Timer functions
@@ -393,3 +390,122 @@ document.querySelectorAll(".question-option").forEach((option) => {
     validationMessage.style.display = "none";
   });
 });
+
+// Load face-api.js models using Tiny Face Detector for better performance
+Promise.all([
+  faceapi.nets.tinyFaceDetector.loadFromUri(
+    "https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/weights"
+  ),
+  faceapi.nets.faceLandmark68Net.loadFromUri(
+    "https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/weights"
+  ),
+]).then(startFaceRecognition);
+
+// Function to start face recognition
+function startFaceRecognition() {
+  console.log("Models loaded, starting face recognition.");
+
+  // Create a canvas to overlay on the video
+  const canvas = faceapi.createCanvasFromMedia(liveVideo);
+  liveVideo.parentNode.insertBefore(canvas, liveVideo.nextSibling);
+
+  const displaySize = {
+    width: liveVideo.videoWidth,
+    height: liveVideo.videoHeight,
+  };
+  faceapi.matchDimensions(canvas, displaySize);
+
+  // Guidance message element
+  const guidanceMessageElement = document.getElementById("guidanceMessage");
+
+  // Define Tiny Face Detector options
+  const faceDetectorOptions = new faceapi.TinyFaceDetectorOptions({
+    inputSize: 160, // Adjusted input size for performance
+    scoreThreshold: 0.5, // Adjusted threshold
+  });
+
+  liveVideo.addEventListener("play", () => {
+    const onPlay = async () => {
+      const detections = await faceapi
+        .detectAllFaces(liveVideo, faceDetectorOptions)
+        .withFaceLandmarks();
+
+      const resizedDetections = faceapi.resizeResults(detections, displaySize);
+
+      // Clear the canvas
+      canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw detections and landmarks on the canvas
+      faceapi.draw.drawDetections(canvas, resizedDetections);
+      faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
+
+      // Process guidance messages
+      let finalMessage = "";
+
+      if (resizedDetections.length > 0) {
+        // Process each detection
+        resizedDetections.forEach((detection) => {
+          const box = detection.detection.box;
+          const landmarks = detection.landmarks;
+
+          // Check if face is centered
+          const isHeadCentered = checkIfHeadCentered(box, displaySize);
+          // Check if eyes are looking at the camera
+          const isLookingAtCamera = checkEyeFocus(landmarks);
+
+          // Determine guidance message
+          if (!isHeadCentered && !isLookingAtCamera) {
+            finalMessage = "Please center your head and look at the camera.";
+          } else if (!isHeadCentered) {
+            finalMessage = "Please center your head.";
+          } else if (!isLookingAtCamera) {
+            finalMessage = "Please look at the camera.";
+          } else {
+            finalMessage = "Great! Stay still.";
+          }
+        });
+      } else {
+        finalMessage =
+          "No face detected. Please position yourself in front of the camera.";
+      }
+
+      // Update the guidance message display
+      guidanceMessageElement.textContent = finalMessage;
+
+      // Use requestAnimationFrame for smoother updates
+      requestAnimationFrame(onPlay);
+    };
+
+    onPlay();
+  });
+}
+
+// Helper functions
+function checkIfHeadCentered(box, displaySize) {
+  // Calculate the center of the face bounding box
+  const faceCenterX = box.x + box.width / 2;
+  const faceCenterY = box.y + box.height / 2;
+
+  // Calculate the center of the image
+  const imageCenterX = displaySize.width / 2;
+  const imageCenterY = displaySize.height / 2;
+
+  // Define tolerance (e.g., 20% of image dimensions)
+  const toleranceX = displaySize.width * 0.2;
+  const toleranceY = displaySize.height * 0.2;
+
+  // Check if face is centered within tolerance
+  const isCenteredX = Math.abs(faceCenterX - imageCenterX) <= toleranceX;
+  const isCenteredY = Math.abs(faceCenterY - imageCenterY) <= toleranceY;
+
+  return isCenteredX && isCenteredY;
+}
+
+function checkEyeFocus(landmarks) {
+  // Simplified eye focus check
+  // For more accurate results, you'd need to implement iris tracking
+  // Here we'll assume the user is looking at the camera if the face is detected
+
+  // You can enhance this function with more complex logic if needed
+  return true; // Placeholder
+}
